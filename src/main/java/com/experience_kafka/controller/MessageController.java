@@ -2,6 +2,7 @@ package com.experience_kafka.controller;
 
 
 import com.experience_kafka.model.Message;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.experience_kafka.service.KafkaProducerService;
