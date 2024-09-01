@@ -15,59 +15,49 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-
+@DirtiesContext
 public class KafkaConsumerTest {
-
-    @Autowired
-    private KafkaTemplate<String, Message> kafkaTemplate;
 
     @Autowired
     private MessageRepository messageRepository;
 
-    private Consumer<String, Message> consumer;
-
     @Autowired
     private KafkaProducerService kafkaProducerService;
 
-    @Autowired
-    private MessageController messageController;
 
     @Test
     @PostConstruct
 
     public void testReceiveMessageFromKafkaAndSaveToDatabase() throws InterruptedException {
+        // Создание тестового сообщения
         Message message = new Message();
-        message.setContent("Hello, Kafka123123123!");
+        message.setContent("Hello, Kafka!");
 
+        // Отправка сообщения в Kafka
         kafkaProducerService.sendMessage(message);
 
-        var list = messageController.getAllMessages();
-        int y = 0;
+        // Ожидание, пока сообщение будет обработано и сохранено в базе данных
+        await().atMost(20, TimeUnit.SECONDS).untilAsserted(() -> {
+            // Проверка, что сообщение сохранено в базе данных
+            assertThat(messageRepository.findAll()).anyMatch(msg -> msg.getContent().equals("Hello, Kafka!"));
+        });
+
     }
 
 }
 
-//        // Получение сообщения из Kafka
-//        ConsumerRecord<String, Message> singleRecord = KafkaTestUtils.getSingleRecord(consumer, "test-topic");
-//        Message receivedMessage = singleRecord.value();
-//
-//        // Проверка, что сообщение было получено
-//        assertEquals("Hello, Kafka!", receivedMessage.getContent());
-//
-//        // Проверка, что сообщение было сохранено в базе данных
-//        Message savedMessage = messageRepository.findById(receivedMessage.getId()).orElse(null);
-//        assertNotNull(savedMessage);
-//        assertEquals("Hello, Kafka!", savedMessage.getContent());
-//    }
-//}
