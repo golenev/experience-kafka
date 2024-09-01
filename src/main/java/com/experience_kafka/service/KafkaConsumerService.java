@@ -14,6 +14,8 @@ public class KafkaConsumerService {
 
     @KafkaListener(topics = "test-topic", groupId = "test-group")
     public void listen(Message message) {
+        System.out.println("Received message: " + message.getContent());
         messageRepository.save(message);
     }
+
 }

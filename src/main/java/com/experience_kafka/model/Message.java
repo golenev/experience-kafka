@@ -5,7 +5,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class Message {
 
@@ -14,16 +16,8 @@ public class Message {
     private Long id;
     private String content;
 
-    public Long getId() {
-        return id;
-    }
-
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getContent() {
-        return content;
     }
 
     public void setContent(String content) {
