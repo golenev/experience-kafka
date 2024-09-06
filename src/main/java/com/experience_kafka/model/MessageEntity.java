@@ -4,23 +4,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Entity
-public class Message {
+public class MessageEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String content;
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }

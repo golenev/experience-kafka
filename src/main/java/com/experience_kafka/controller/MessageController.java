@@ -1,9 +1,8 @@
 package com.experience_kafka.controller;
 
 
-import com.experience_kafka.model.Message;
+import com.experience_kafka.model.MessageEntity;
 import com.experience_kafka.repository.MessageRepository;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.experience_kafka.service.KafkaProducerService;
@@ -11,18 +10,17 @@ import com.experience_kafka.service.KafkaProducerService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/messages")
 public class MessageController {
-
-    @Autowired
-    private KafkaProducerService kafkaProducerService;
 
     @Autowired
     private MessageRepository messageRepository;
 
-    @PostMapping
-    public void sendMessage(@RequestBody Message message) {
-        kafkaProducerService.sendMessage(message);
+    @Autowired
+    private KafkaProducerService kafkaProducerService;
+
+    @PostMapping("/send")
+    public void sendMessage(@RequestBody MessageEntity message) {
+        kafkaProducerService.sendMessage("test-topic", message);
     }
 
     @GetMapping("/test")
@@ -31,7 +29,7 @@ public class MessageController {
     }
 
     @GetMapping
-    public List<Message> getAllMessages() {
+    public List<MessageEntity> getAllMessages() {
         return messageRepository.findAll();
     }
 
