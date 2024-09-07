@@ -44,7 +44,6 @@ public class KafkaService {
     public List<String> fetchMessagesFromBeginning(String topic) {
         Consumer<String, String> consumer = consumerFactory.createConsumer();
         List<String> messages = new ArrayList<>();
-
         // Указываем, что хотим читать с самого начала
         TopicPartition partition = new TopicPartition(topic, 0);
         consumer.assign(Collections.singletonList(partition));

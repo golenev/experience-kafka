@@ -39,10 +39,8 @@ public class KafkaController {
                 .filter(message -> existingMessages.stream()
                         .noneMatch(existingMessage -> existingMessage.getMessage().equals(message)))
                 .toList();
-
         // Сохраняем новые сообщения в базу данных
-        recordRepository.saveAll(newMessages.stream().map(Messages::new).collect(Collectors.toList()));
-
+        recordRepository.saveAll(newMessages.stream().map(Messages::new).toList());
         // Возвращаем все сообщения из базы данных
         return recordRepository.findAll();
     }
