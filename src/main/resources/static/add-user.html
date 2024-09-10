@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add User</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<h1>Add User</h1>
+<form id="addUserForm">
+    <input type="text" id="name" placeholder="Name" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <input type="text" id="roles" placeholder="Roles" required>
+    <button type="submit">Add User</button>
+</form>
+<div id="result"></div>
+
+<script>
+    document.getElementById('addUserForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const name = document.getElementById('name').value;
+        const password = document.getElementById('password').value;
+        const roles = document.getElementById('roles').value;
+
+        fetch('/api/v1/add-user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, password, roles })
+        })
+        .then(response => response.text())
+        .then(data => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = data;
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+</body>
+</html>
