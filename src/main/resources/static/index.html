@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kafka Messages</title>
+    <title>Welcome</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,37 +13,15 @@
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
-        }
-        #messages {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
+            margin: 10px;
         }
     </style>
 </head>
 <body>
-<h1>Kafka Messages</h1>
-<button id="fetchButton">Fetch Messages</button>
-<div id="messages"></div>
-
-<script>
-    document.getElementById('fetchButton').addEventListener('click', function() {
-        fetch('/api/v1/fetch-records', {
-            method: 'GET'
-        })
-        .then(response => response.json())
-        .then(data => {
-            const messagesDiv = document.getElementById('messages');
-            messagesDiv.innerHTML = '';
-            data.forEach(message => {
-                const p = document.createElement('p');
-                p.textContent = message.message;
-                messagesDiv.appendChild(p);
-            });
-        })
-        .catch(error => console.error('Error:', error));
-    });
-</script>
+<h1>Welcome to the Application</h1>
+<button onclick="location.href='/fetch-records.html'">Fetch Records</button>
+<button onclick="location.href='/test.html'">Test</button>
+<button onclick="location.href='/add-user.html'">Add User</button>
+<button onclick="location.href='/send-to-kafka.html'">Send to Kafka</button>
 </body>
 </html>

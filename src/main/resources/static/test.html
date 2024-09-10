@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<h1>Test</h1>
+<button id="testButton">Test Resource</button>
+<div id="result"></div>
+
+<script>
+    document.getElementById('testButton').addEventListener('click', function() {
+        fetch('api/v1/test', {
+            method: 'GET'
+        })
+        .then(response => response.text())
+        .then(data => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = data;
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+</body>
+</html>

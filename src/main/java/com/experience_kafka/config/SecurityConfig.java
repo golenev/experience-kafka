@@ -42,11 +42,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("api/v1/add-user").permitAll()
-                        .requestMatchers("api/v1/fetch-records").permitAll()
-
-                        .requestMatchers("/static/**").authenticated() // Разрешаем доступ к статическим ресурсам
-                        .requestMatchers("/index.html").authenticated() // Разрешаем доступ к index.html
+                        .requestMatchers("/api/v1/add-user").permitAll()
+                        .requestMatchers("/api/v1/test").permitAll()
+                        .requestMatchers("/index.html").authenticated()
+                        .requestMatchers("/fetch-records.html").authenticated()
+                        .requestMatchers("/test.html").authenticated()
+                        .requestMatchers("/add-user.html").authenticated()
+                        .requestMatchers("/send-to-kafka.html").authenticated()
+                        .anyRequest().authenticated()
                 )
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .build();

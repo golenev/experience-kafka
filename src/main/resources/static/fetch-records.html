@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Records</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #messages {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<h1>Fetch Records</h1>
+<button id="fetchButton">Fetch Messages</button>
+<div id="messages"></div>
+
+<script>
+    document.getElementById('fetchButton').addEventListener('click', function() {
+        fetch('/api/v1/fetch-records', {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML = '';
+            data.forEach(message => {
+                const p = document.createElement('p');
+                p.textContent = message.message;
+                messagesDiv.appendChild(p);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+</body>
+</html>

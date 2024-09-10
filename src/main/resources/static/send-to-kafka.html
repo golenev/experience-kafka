@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send To Kafka</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            margin-top: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<h1>Send To Kafka</h1>
+<form id="sendKafkaForm">
+    <textarea id="messages" placeholder="Enter messages, one per line" required></textarea>
+    <button type="submit">Send Messages</button>
+</form>
+<div id="result"></div>
+
+<script>
+    document.getElementById('sendKafkaForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const messagesText = document.getElementById('messages').value;
+        const messages = messagesText.split('\n').filter(message => message.trim() !== '');
+
+        fetch('/api/v1/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(messages)
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error('Failed to send messages');
+            }
+        })
+        .then(data => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = 'Messages sent successfully';
+        })
+        .catch(error => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = 'Error: ' + error.message;
+        });
+    });
+</script>
+</body>
+</html>

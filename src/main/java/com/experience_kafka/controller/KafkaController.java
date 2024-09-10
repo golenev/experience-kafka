@@ -1,13 +1,9 @@
 package com.experience_kafka.controller;
 
 import com.experience_kafka.model.Messages;
-import com.experience_kafka.model.MyUser;
 import com.experience_kafka.repository.RecordRepository;
 import com.experience_kafka.service.KafkaService;
-import com.experience_kafka.service.MyUserDetailsService;
-import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +17,6 @@ public class KafkaController {
 
     @Autowired
     private RecordRepository recordRepository;
-
-
 
     @PostMapping("/send")
     public void sendMessage(@RequestBody List<String> messages) {
@@ -54,7 +48,5 @@ public class KafkaController {
         // Возвращаем все сообщения из базы данных
         return recordRepository.findAll();
     }
-
-
 
 }
