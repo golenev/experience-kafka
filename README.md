@@ -55,3 +55,10 @@ kafka-console-consumer --topic send-topic --from-beginning --bootstrap-server lo
 ```
 ["new message1", "new message 2", "new message 3"]
 ```
+
+### 15. Для удаления топика из Kafka, нужно последовательно выполнить следующие команды,
+## где send-topic это текущее имя топика
+```
+docker-compose exec kafka bash
+kafka-topics --delete --topic send-topic --bootstrap-server localhost:9092
+```

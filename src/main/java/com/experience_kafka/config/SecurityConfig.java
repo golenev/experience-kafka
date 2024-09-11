@@ -44,11 +44,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/add-user").permitAll()
                         .requestMatchers("/api/v1/test").permitAll()
+                        .requestMatchers("/records").authenticated()
+                        .requestMatchers("/recreateTopic").authenticated()
+
                         .requestMatchers("/index.html").authenticated()
                         .requestMatchers("/fetch-records.html").authenticated()
                         .requestMatchers("/test.html").authenticated()
                         .requestMatchers("/add-user.html").authenticated()
                         .requestMatchers("/send-to-kafka.html").authenticated()
+                        .requestMatchers("/fetch-records-from-db.html").authenticated()
+                        .requestMatchers("/clear-kafka-topic.html").authenticated()
+
                         .anyRequest().authenticated()
                 )
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)

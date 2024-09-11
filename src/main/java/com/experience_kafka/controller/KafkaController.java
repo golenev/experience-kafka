@@ -6,7 +6,9 @@ import com.experience_kafka.service.KafkaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -19,8 +21,9 @@ public class KafkaController {
     private RecordRepository recordRepository;
 
     @PostMapping("/send")
-    public void sendMessage(@RequestBody List<String> messages) {
+    public String sendMessage(@RequestBody List<String> messages) {
         kafkaService.sendMessage("send-topic", messages);
+        return "Сообщение отправлено в Кафку";
     }
 
     @GetMapping("/records")
@@ -34,7 +37,7 @@ public class KafkaController {
     }
 
     @GetMapping("/fetch-records")
-    public List<Messages> fetchAndSaveRecords() {
+    public Map<String, Object> fetchAndSaveRecords() {
         List<String> messages = kafkaService.fetchMessagesFromBeginning("send-topic");
         List<Messages> existingMessages = recordRepository.findAll();
 
@@ -45,8 +48,18 @@ public class KafkaController {
                 .toList();
         // Сохраняем новые сообщения в базу данных
         recordRepository.saveAll(newMessages.stream().map(Messages::new).toList());
-        // Возвращаем все сообщения из базы данных
-        return recordRepository.findAll();
+
+        // Возвращаем JSON-объект с сообщением и статусом
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", !messages.isEmpty());
+        response.put("message", !messages.isEmpty() ? "Сообщения найдены и отправлены в базу" : "Сообщений нет");
+        return response;
+    }
+
+    @GetMapping("/recreateTopic")
+    public String recreateTopic () {
+        kafkaService.deleteAndRecreateTopic("send-topic");
+        return "Топик успешно удалён и создан заново";
     }
 
 }

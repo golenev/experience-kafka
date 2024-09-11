@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fetch Records From Kafka</title>
+    <title>Clear Kafka Topic</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,23 +23,24 @@
     </style>
 </head>
 <body>
-<h1>Fetch Records from Kafka</h1>
-<h3>Если сообщения будут найдены в Кафке, то они отправятся в базу</h3>
-<button id="fetchButton">Проверить сообщений в Кафке</button>
+<h1>Удаление сообщений из топика</h1>
+<button id="fetchButton">Run recreate</button>
 <div id="messages"></div>
 
 <script>
     document.getElementById('fetchButton').addEventListener('click', function() {
-        fetch('/api/v1/fetch-records', {
+        fetch('/api/v1/recreateTopic', {
             method: 'GET'
         })
         .then(response => response.json())
         .then(data => {
             const messagesDiv = document.getElementById('messages');
             messagesDiv.innerHTML = '';
-            const p = document.createElement('p');
-            p.textContent = data.message;
-            messagesDiv.appendChild(p);
+            data.forEach(message => {
+                const p = document.createElement('p');
+                p.textContent = message.message;
+                messagesDiv.appendChild(p);
+            });
         })
         .catch(error => console.error('Error:', error));
     });
