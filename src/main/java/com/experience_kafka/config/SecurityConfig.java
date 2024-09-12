@@ -44,11 +44,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/add-user").permitAll()
                         .requestMatchers("/api/v1/test").permitAll()
-                        .requestMatchers("/records").authenticated()
-                        .requestMatchers("/recreateTopic").authenticated()
+                        .requestMatchers("/api/v1/saveToRepository").authenticated()
+                        .requestMatchers("/api/v1/recreateTopic").authenticated()
+                        .requestMatchers("/api/v1/showMessages").authenticated()
+                        .requestMatchers("/api/v1/sendToKafka").authenticated()
+                        .requestMatchers("/api/v1/records").authenticated()
+                        .requestMatchers("/api/v1/deleteRecords").authenticated()
 
+
+                        .requestMatchers("/get-messages-from-kafka.html").authenticated()
                         .requestMatchers("/index.html").authenticated()
-                        .requestMatchers("/fetch-records.html").authenticated()
+                        .requestMatchers("/send-messages-from-kafka-to-postgres.html").authenticated()
                         .requestMatchers("/test.html").authenticated()
                         .requestMatchers("/add-user.html").authenticated()
                         .requestMatchers("/send-to-kafka.html").authenticated()

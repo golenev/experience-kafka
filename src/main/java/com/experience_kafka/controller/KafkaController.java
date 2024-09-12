@@ -20,44 +20,19 @@ public class KafkaController {
     @Autowired
     private RecordRepository recordRepository;
 
-    @PostMapping("/send")
+    @PostMapping("/sendToKafka")
     public String sendMessage(@RequestBody List<String> messages) {
         kafkaService.sendMessage("send-topic", messages);
         return "Сообщение отправлено в Кафку";
     }
 
-    @GetMapping("/records")
-    public List<Messages> getAllRecords() {
-        return recordRepository.findAll();
-    }
-
-    @GetMapping("/test")
-    public String testController() {
-        return "Controller is working";
-    }
-
-    @GetMapping("/fetch-records")
-    public Map<String, Object> fetchAndSaveRecords() {
-        List<String> messages = kafkaService.fetchMessagesFromBeginning("send-topic");
-        List<Messages> existingMessages = recordRepository.findAll();
-
-        // Фильтруем сообщения, которые уже есть в базе данных
-        List<String> newMessages = messages.stream()
-                .filter(message -> existingMessages.stream()
-                        .noneMatch(existingMessage -> existingMessage.getMessage().equals(message)))
-                .toList();
-        // Сохраняем новые сообщения в базу данных
-        recordRepository.saveAll(newMessages.stream().map(Messages::new).toList());
-
-        // Возвращаем JSON-объект с сообщением и статусом
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", !messages.isEmpty());
-        response.put("message", !messages.isEmpty() ? "Сообщения найдены и отправлены в базу" : "Сообщений нет");
-        return response;
+    @GetMapping("/showMessages")
+    public List<String> showMessages() {
+        return kafkaService.fetchMessagesFromBeginning("send-topic");
     }
 
     @GetMapping("/recreateTopic")
-    public String recreateTopic () {
+    public String recreateTopic() {
         kafkaService.deleteAndRecreateTopic("send-topic");
         return "Топик успешно удалён и создан заново";
     }

@@ -38,12 +38,13 @@ public class KafkaService {
         messages.forEach(message -> kafkaTemplate.send(topic, message));
     }
 
-    @KafkaListener(topics = "send-topic", groupId = "group-java-test")
-    public void listen(String message) {
-        Messages record = new Messages();
-        record.setMessage(message);
-        recordRepository.save(record);
-    }
+    //этот метод автоматически отправляет сообщения из кафки в базу
+//    @KafkaListener(topics = "send-topic", groupId = "group-java-test")
+//    public void listen(String message) {
+//        Messages record = new Messages();
+//        record.setMessage(message);
+//        recordRepository.save(record);
+//    }
 
     public List<String> fetchMessagesFromBeginning(String topic) {
         Consumer<String, String> consumer = consumerFactory.createConsumer();
@@ -52,7 +53,6 @@ public class KafkaService {
         TopicPartition partition = new TopicPartition(topic, 0);
         consumer.assign(Collections.singletonList(partition));
         consumer.seekToBeginning(Collections.singletonList(partition));
-
         try {
             while (true) {
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
@@ -67,27 +67,21 @@ public class KafkaService {
         } finally {
             consumer.close();
         }
-
         return messages;
     }
 
     public void deleteAndRecreateTopic(String topic) {
         Map<String, Object> configs = kafkaAdmin.getConfigurationProperties();
-
         try (AdminClient adminClient = AdminClient.create(configs)) {
             // Удаляем топик
             DeleteTopicsResult deleteTopicsResult = adminClient.deleteTopics(Collections.singletonList(topic));
             deleteTopicsResult.all().get();
             // Проверяем, удален ли топик
-
                 Thread.sleep(5000); // Проверяем каждую секунду
-
-
             // Создаем топик заново
             NewTopic newTopic = new NewTopic(topic, 1, (short) 1);
             CreateTopicsResult createTopicsResult = adminClient.createTopics(Collections.singletonList(newTopic));
             createTopicsResult.all().get();
-
             System.out.println("Топик " + topic + " удален и создан заново.");
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();

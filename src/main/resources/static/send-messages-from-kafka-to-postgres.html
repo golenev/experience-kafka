@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fetch Records From Kafka</title>
+    <title>From Kafka to PostgresSQL</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,14 +23,14 @@
     </style>
 </head>
 <body>
-<h1>Fetch Records from Kafka</h1>
-<h3>Если сообщения будут найдены в Кафке, то они отправятся в базу</h3>
-<button id="fetchButton">Проверить сообщений в Кафке</button>
+<h1>Send Records from Kafka to Postgres</h1>
+<h3>Если сообщений в Кафке будет достаточно, мы отправим их в базу</h3>
+<button id="fetchButton">Проверить сообщения в Кафке</button>
 <div id="messages"></div>
 
 <script>
     document.getElementById('fetchButton').addEventListener('click', function() {
-        fetch('/api/v1/fetch-records', {
+        fetch('/api/v1/saveToRepository', {
             method: 'GET'
         })
         .then(response => response.json())

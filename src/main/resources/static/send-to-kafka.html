@@ -46,7 +46,7 @@
         const messagesText = document.getElementById('messages').value;
         const messages = messagesText.split('\n').filter(message => message.trim() !== '');
 
-        fetch('/api/v1/send', {
+        fetch('/api/v1/sendToKafka', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
