@@ -12,53 +12,45 @@ docker-compose up -d
 docker-compose ps
 ```
 
-### 4. Вы должны увидеть два запущенных контейнера: один для Zookeeper и один для Kafka.
+### 4. Вы должны увидеть три запущенных контейнера.
+![image](https://github.com/user-attachments/assets/13fecc76-cff5-4705-af00-a402b5bd68da)
 
-### 5. Создание темы(топика) в Kafka. Откройте новое окно терминала и создайте тему с именем test-topic:
+
+### 5. Создание темы(топика) в Kafka. Откройте новое окно терминала и создайте тему с именем send-topic:
 
 ```
-   docker-compose exec kafka kafka-topics --create --topic test-topic --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+   docker-compose exec kafka kafka-topics --create --topic send-topic --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 ```
 
 ### 6. Запустите Spring приложение
 
-### 7. Откройте Postman или любой другой инструмент для отправки HTTP запросов. Отправьте POST запрос на URL http://localhost:6789/api/v1/messages с телом запроса в формате JSON:
+### 7. Откройте Postman или любой другой инструмент для отправки HTTP запросов. Отправьте на сервер запрос из курла ниже, чтобы создать администратора приложения:
 
 ```
-{
-    "content": "Hello, Kafka!"
-}
+curl --location --request POST 'localhost:6789/api/v1/add-user' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "admin",
+    "password": "qwerty",
+    "roles": "ROLE_ADMIN"
+}'
 ```
 
-### 8. Откройте вэб интерфейс базы данных H2 http://localhost:6789/h2-console/
-
-### 9. Проверьте, что Кафка доставила сообщение в базу SELECT * FROM MESSAGE
-
-### 10. Проверить в консоли содержимое топика после отправки в него сообщений можно командой через терминал контейнера Кафки
-
-### 11. Сначала открываем консоль контейнера, в котором у нас Кафка
+### 8. Откройте браузер на странице http://localhost:6789/login и пароль от созданного пользователя
 
 ```
-docker-compose exec kafka bash
-```
-
-### 12. В консоли Кафки пишем команды для просмотреа сообщений нашего топика, где имя топика "send-topic"
+![image](https://github.com/user-attachments/assets/5865643a-4fed-4a73-9573-97ba8d611691)
 
 ```
-kafka-console-consumer --topic send-topic --from-beginning --bootstrap-server localhost:9092
-```
 
-### 13. После запуска Spring приложения, на странице http://localhost:6789/index.html можно получить все имеющиеся сообщения из Кафки
+### 9. Далее в веб интерфейсе приложения доступны следующие операции
+![image](https://github.com/user-attachments/assets/99fa1852-ab8c-4d9d-9efc-26441e429bcf)
 
-### 14. Также можно добавить новые сообщения через POST запрос на эндпоинт http://localhost:6789/api/v1/send с телом вида 
 
-```
-["new message1", "new message 2", "new message 3"]
-```
-
-### 15. Для удаления топика из Kafka, нужно последовательно выполнить следующие команды,
-## где send-topic это текущее имя топика
-```
-docker-compose exec kafka bash
-kafka-topics --delete --topic send-topic --bootstrap-server localhost:9092
-```
+1. Показать текущие сообщения в кафке внутри созданного топика
+2. Отправить в кафку сообщение через форму инпута
+3. Посмотреть текущие сообщения, отправленные из кафки в связанную таблицу PosgreSQL
+4. Отправить сообщения из Кафки в PostgreSQL при условии, что их накопилось больше или равно 10 штук
+5. Удалить все сообщения из топика Кафки
+6. Удалить все сообщения из связанной с кафкой таблицы PostgreSQL
+7. Добавить нового пользователя приложения
