@@ -41,10 +41,8 @@ curl --location --request POST 'localhost:6789/api/v1/add-user' \
 
 #### 8. Откройте браузер на странице http://localhost:6789/login и пароль от созданного пользователя
 
-```
 ![image](https://github.com/user-attachments/assets/5865643a-4fed-4a73-9573-97ba8d611691)
 
-```
 
 #### 9. Далее в веб интерфейсе приложения доступны следующие операции
 ![image](https://github.com/user-attachments/assets/99fa1852-ab8c-4d9d-9efc-26441e429bcf)
