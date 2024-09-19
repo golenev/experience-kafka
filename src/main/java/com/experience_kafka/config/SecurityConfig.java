@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/sendToKafka").authenticated()
                         .requestMatchers("/api/v1/records").authenticated()
                         .requestMatchers("/api/v1/deleteRecords").authenticated()
+                        .requestMatchers("/api/v1/courses").permitAll()
 
 
                         .requestMatchers("/get-messages-from-kafka.html").authenticated()
