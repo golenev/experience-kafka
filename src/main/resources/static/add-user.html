@@ -27,21 +27,29 @@
             padding: 10px;
             border: 1px solid #ccc;
             background-color: #f9f9f9;
+            white-space: pre-wrap; /* Позволяет отображать текст с переносами строк */
+            font-family: monospace; /* Используем моноширинный шрифт для лучшего отображения JSON */
         }
     </style>
 </head>
 <body>
 <h1>Add User</h1>
-<form id="addUserForm">
+<form id="addUser Form">
     <input type="text" id="name" placeholder="Name" required>
     <input type="password" id="password" placeholder="Password" required>
     <input type="text" id="roles" placeholder="Roles" required>
     <button type="submit">Add User</button>
 </form>
+
+<h2>Get User</h2>
+<form id="getUser Form">
+    <input type="text" id="getUser Name" placeholder="Enter username" required>
+    <button type="submit">Get User</button>
+</form>
 <div id="result"></div>
 
 <script>
-    document.getElementById('addUserForm').addEventListener('submit', function(event) {
+    document.getElementById('addUser Form').addEventListener('submit', function(event) {
         event.preventDefault();
         const name = document.getElementById('name').value;
         const password = document.getElementById('password').value;
@@ -60,6 +68,35 @@
             resultDiv.textContent = data;
         })
         .catch(error => console.error('Error:', error));
+    });
+
+    document.getElementById('getUser Form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const username = document.getElementById('getUser Name').value;
+
+        // Передаем имя пользователя как query параметр
+        fetch(`/api/v1/pull-user?name=${encodeURIComponent(username)}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('User  not found');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const resultDiv = document.getElementById('result');
+            // Используем JSON.stringify с параметрами для форматирования
+            resultDiv.textContent = JSON.stringify(data, null, 4); // 4 пробела для отступа
+        })
+        .catch(error => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = error.message;
+            console.error('Error:', error);
+        });
     });
 </script>
 </body>
